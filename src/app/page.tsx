@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Alic3 } from '@/app/components/Alic3'
 import { Background } from '@/app/components/Background'
+import { CanvasBackground } from '@/app/components/CanvasBackground'
 
 import styles from './page.module.css'
 
@@ -32,6 +33,8 @@ export default function Home(): React.ReactElement {
           I&apos;m Alic3...
         </a>
       </main>
+
+      <CanvasBackground />
 
       <div className={styles.alic3}>
         <Alic3 />
