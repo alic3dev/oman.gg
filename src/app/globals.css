@@ -3,21 +3,28 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+
+  html {
+    color-scheme: dark;
+  }
+} */
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+
+  font-size: 8px;
 }
 
 body {
-  color: var(--foreground);
+  /* color: var(--foreground); */
+  color: #fff;
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -33,10 +40,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }
