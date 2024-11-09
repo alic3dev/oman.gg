@@ -31,6 +31,10 @@ export default function Home(): React.ReactElement {
           I&apos;m Alic3...
         </a>
       </main>
+
+      <div className={styles.alic3}>
+        <Alic3 />
+      </div>
     </>
   )
 }
