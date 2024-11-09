@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Alic3 } from '@/app/components/Alic3'
 import { Background } from '@/app/components/Background'
 
 import styles from './page.module.css'
