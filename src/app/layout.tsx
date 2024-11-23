@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { LXGW_WenKai_TC } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 
 import './globals.css'
 
@@ -33,7 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={bodyFont.className}>{children}</body>
+      <body className={bodyFont.className}>
+        {children}
+
+        <Analytics />
+      </body>
     </html>
   )
 }
