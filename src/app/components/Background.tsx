@@ -63,7 +63,7 @@ function image_element_create(image_data: ImageData): HTMLImageElement {
   return image_element
 }
 
-export function Background(): React.ReactNode {
+export function Background(): React.ReactElement {
   const reference_sorted_elements = React.useRef<HTMLDivElement>(null)
   const reference_sorted_elements_next = React.useRef<HTMLDivElement>(null)
   const reference_degrees = React.useRef<{ degrees: number }>({
