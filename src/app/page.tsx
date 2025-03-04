@@ -9,12 +9,12 @@ import styles from './page.module.css'
 export default function Home(): React.ReactElement {
   return (
     <>
-      <Background />
-
       <main className={styles.page}>
         <h1 className={styles.title}>十日尸人十尸火 日尸木火浒： 日尸十木火</h1>
 
         <div className={styles.content}>
+          <Background />
+
           <aside className={styles.side}>
             <h3>十日筏被日中弓十戈水 閕</h3>
             <p>日木尸火山大十月女山月中戈尸尿</p>
@@ -49,6 +49,8 @@ export default function Home(): React.ReactElement {
             <h3>鋒頭愛女月戈山</h3>
             <h3>月月戈山大叔會</h3>
           </aside>
+
+          <CanvasBackground />
         </div>
 
         <h1 className={styles.end}>
@@ -57,8 +59,6 @@ export default function Home(): React.ReactElement {
           何問題十戈弓女
         </h1>
       </main>
-
-      <CanvasBackground />
 
       <div className={styles.alic3}>
         <Alic3 />

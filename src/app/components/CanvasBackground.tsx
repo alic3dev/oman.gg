@@ -16,10 +16,7 @@ export function CanvasBackground(): React.ReactElement {
       // { willReadFrequently: true },
     )
     const ctxSecond: CanvasRenderingContext2D | null =
-      secondCanvasRef.current.getContext(
-        '2d',
-        // { willReadFrequently: true },
-      )
+      secondCanvasRef.current.getContext('2d', { willReadFrequently: true })
 
     if (!ctx || !ctxSecond) return
 
@@ -36,37 +33,37 @@ export function CanvasBackground(): React.ReactElement {
 
     let animationFrameHandle: number
 
-    // const corruptColors: string[] = ['#F00', '#0F0', '#00F']
+    const corruptColors: string[] = ['#FF000001', '#00FF0001', '#0000FF01']
 
-    // const prevTime: DOMHighResTimeStamp = 0
+    let prevTime: DOMHighResTimeStamp = 0
 
-    function animateFrame(/*time: DOMHighResTimeStamp*/): void {
+    function animateFrame(time: DOMHighResTimeStamp): void {
       if (!ctx || !ctxSecond) return
 
-      // if (time - prevTime >= Math.random() * 150 + 100) {
-      //   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      if (time - prevTime >= Math.random() * 150 + 100) {
+        //   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-      //   const corruptionCount: number = Math.random() * 9000 + 1000
+        const corruptionCount: number = Math.random() * 9000 + 1000
 
-      //   for (let i = 0; i < corruptionCount; i++) {
-      //     const x: number = Math.floor(Math.random() * ctx.canvas.width)
-      //     const y: number = Math.floor(Math.random() * ctx.canvas.height)
-      //     const w: number = Math.floor(Math.random() * 10)
-      //     const h: number = Math.floor(Math.random() * 10)
+        for (let i = 0; i < corruptionCount; i++) {
+          const x: number = Math.floor(Math.random() * ctx.canvas.width)
+          const y: number = Math.floor(Math.random() * ctx.canvas.height)
+          const w: number = Math.floor(Math.random() * 10)
+          const h: number = Math.floor(Math.random() * 10)
 
-      //     ctx.fillStyle =
-      //       corruptColors[Math.floor(Math.random() * corruptColors.length)]
-      //     ctx.beginPath()
-      //     ctx.rect(x, y, w, h)
-      //     ctx.fill()
-      //   }
+          ctx.fillStyle =
+            corruptColors[Math.floor(Math.random() * corruptColors.length)]
+          ctx.beginPath()
+          ctx.rect(x, y, w, h)
+          ctx.fill()
+        }
 
-      //   prevTime = time
-      // }
+        prevTime = time
+      }
 
       ctxSecond.clearRect(0, 0, ctxSecond.canvas.width, ctxSecond.canvas.height)
 
-      for (let i: number = 0; i < 1000; i++) {
+      for (let i: number = 0; i < 10; i++) {
         const randomPixel = Math.floor(Math.random() * totalPixels) * 4
 
         const colorVal: number = Math.min(
