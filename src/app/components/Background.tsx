@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 
 import styles from '@/app/components/Background.module.css'
 
@@ -10,7 +9,7 @@ interface Size2D {
   y: number
 }
 
-const imageSizes: {
+const image_sizes: {
   portrait: Size2D
   landscape: Size2D
 } = {
@@ -32,7 +31,7 @@ const images: ImageData[] = [
   },
   {
     src: '3',
-    size: imageSizes.landscape,
+    size: image_sizes.landscape,
   },
   {
     src: '4',
@@ -45,7 +44,7 @@ const images: ImageData[] = [
   },
   {
     src: '7',
-    size: imageSizes.landscape,
+    size: image_sizes.landscape,
   },
   {
     src: '8',
@@ -55,84 +54,100 @@ const images: ImageData[] = [
   },
 ]
 
+function image_element_create(image_data: ImageData): HTMLImageElement {
+  const image_element = document.createElement('img')
+  image_element.src = `${image_data.src}.jpeg`
+  image_element.width = image_data.size?.x ?? image_sizes.portrait.x
+  image_element.height = image_data.size?.y ?? image_sizes.portrait.y
+
+  return image_element
+}
+
 export function Background(): React.ReactNode {
-  const dataRef = React.useRef<{ deg: number }>({
-    deg: 0,
+  const reference_sorted_elements = React.useRef<HTMLDivElement>(null)
+  const reference_sorted_elements_next = React.useRef<HTMLDivElement>(null)
+  const reference_degrees = React.useRef<{ degrees: number }>({
+    degrees: 0,
   })
 
-  const imageElements = React.useMemo<React.ReactElement[]>(
-    (): React.ReactElement[] =>
-      images.map(
-        (imageData: ImageData): React.ReactElement => (
-          <Image
-            src={`/${imageData.src}.jpeg`}
-            alt={imageData.src}
-            width={imageData.size?.x ?? imageSizes.portrait.x}
-            height={imageData.size?.y ?? imageSizes.portrait.y}
-            key={imageData.src}
-          />
-        ),
-      ),
-    [],
-  )
+  React.useEffect((): void => {
+    if (reference_sorted_elements.current) {
+      reference_sorted_elements.current.innerHTML = ''
 
-  const [startingIndex, setStartingIndex] = React.useState<number>(0)
-
-  const sortedElements = React.useMemo<
-    React.ReactElement[]
-  >((): React.ReactElement[] => {
-    const res: React.ReactElement[] = []
-
-    for (let i: number = 0; i < imageElements.length; i++) {
-      res.push(
-        <div key={`${i}: ${startingIndex}`}>
-          {imageElements[(i + startingIndex) % 8]}
-        </div>,
-      )
+      for (let images_index = 0; images_index < images.length; ++images_index) {
+        const image_data: ImageData = images[images_index]
+        const image_element: HTMLImageElement = image_element_create(image_data)
+        reference_sorted_elements.current.append(image_element)
+      }
     }
 
-    return res
-  }, [startingIndex, imageElements])
+    if (reference_sorted_elements_next.current) {
+      reference_sorted_elements_next.current.innerHTML = ''
 
-  const nextSortedElements = React.useMemo<
-    React.ReactElement[]
-  >((): React.ReactElement[] => {
-    const res: React.ReactElement[] = []
+      for (let images_index = 0; images_index < images.length; ++images_index) {
+        const image_data: ImageData = images[images_index]
+        const image_element: HTMLImageElement = image_element_create(image_data)
+        reference_sorted_elements_next.current.append(image_element)
+      }
 
-    for (let i: number = 0; i < imageElements.length; i++) {
-      res.push(
-        <div
-          key={`${i}: ${startingIndex}`}
-          style={{ filter: `hue-rotate(${dataRef.current.deg}deg)` }}
-        >
-          {imageElements[(i + startingIndex + 1) % 8]}
-        </div>,
-      )
+      const element_last: Element =
+        reference_sorted_elements_next.current.children[
+          reference_sorted_elements_next.current.children.length - 1
+        ]
+      reference_sorted_elements_next.current.removeChild(element_last)
+      reference_sorted_elements_next.current.prepend(element_last)
     }
-
-    return res
-  }, [startingIndex, imageElements])
+  }, [])
 
   React.useEffect((): (() => void) => {
-    function progressImages(): void {
-      dataRef.current.deg = (dataRef.current.deg + 9) % 360
+    let animation_frame_handle: number = 0
+    let time_previous: DOMHighResTimeStamp = 0
+    function animation_frame(time_current: DOMHighResTimeStamp): void {
+      const time_delta: DOMHighResTimeStamp = time_current - time_previous
 
-      setStartingIndex(
-        (prevValue: number): number => (prevValue + 1) % imageElements.length,
-      )
+      if (time_current !== 0 && time_delta < 50) {
+        animation_frame_handle = window.requestAnimationFrame(animation_frame)
+        return
+      }
+
+      time_previous = time_current
+
+      reference_degrees.current.degrees =
+        (reference_degrees.current.degrees + 9) % 360
+
+      if (reference_sorted_elements.current) {
+        const element_last: Element =
+          reference_sorted_elements.current.children[
+            reference_sorted_elements.current.children.length - 1
+          ]
+        reference_sorted_elements.current.removeChild(element_last)
+        reference_sorted_elements.current.prepend(element_last)
+      }
+
+      if (reference_sorted_elements_next.current) {
+        const element_last: Element =
+          reference_sorted_elements_next.current.children[
+            reference_sorted_elements_next.current.children.length - 1
+          ]
+        reference_sorted_elements_next.current.removeChild(element_last)
+        reference_sorted_elements_next.current.prepend(element_last)
+
+        reference_sorted_elements_next.current.style.filter = `hue-rotate(${reference_degrees.current.degrees}deg) contrast(2) blur(20px)`
+      }
+
+      animation_frame_handle = window.requestAnimationFrame(animation_frame)
     }
-
-    const interval: number = window.setInterval(progressImages, 10)
+    animation_frame(time_previous)
 
     return (): void => {
-      window.clearInterval(interval)
+      window.cancelAnimationFrame(animation_frame_handle)
     }
-  }, [imageElements])
+  }, [])
 
   return (
     <div className={styles.background}>
-      {sortedElements}
-      {nextSortedElements}
+      <div ref={reference_sorted_elements} />
+      <div ref={reference_sorted_elements_next} />
     </div>
   )
 }
